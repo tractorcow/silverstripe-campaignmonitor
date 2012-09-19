@@ -1,0 +1,3 @@
+[submodule "thirdparty/createsend"]
+	path = thirdparty/createsend
+	url = git://github.com/campaignmonitor/createsend-php.git
