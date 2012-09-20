@@ -14,10 +14,6 @@
  * @property string $ConfirmationSuccessPage
  */
 class CMList extends LazyLoadedCMObject {
-	/**
-	 * @var CS_REST_Lists
-	 */
-	protected $listInterface = null;
 
 	/**
 	 * Determine if full details for this client have been loaded

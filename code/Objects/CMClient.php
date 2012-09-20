@@ -12,11 +12,6 @@
  * @proerty mixed $BillingDetails
  */
 class CMClient extends LazyLoadedCMObject {
-	
-	/**
-	 * @var CS_REST_Clients
-	 */
-	protected $clientInterface = null;
 
 	/**
 	 * Determine if full details for this client have been loaded
@@ -57,18 +52,6 @@ class CMClient extends LazyLoadedCMObject {
 		} elseif ($this->record) {
 			$this->record->ClientID = $value;
 		}
-	}
-
-	/**
-	 * 
-	 * @param string $apiKey
-	 * @param mixed $data
-	 * @param CS_REST_Clients $clientInterface 
-	 */
-	function __construct($apiKey, $data, $clientInterface = null) {
-		parent::__construct($apiKey, $data);
-
-		$this->clientInterface = $clientInterface;
 	}
 	
 	function buildRestInterface() {
