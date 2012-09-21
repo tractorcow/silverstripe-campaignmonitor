@@ -14,39 +14,36 @@
  * @property string $ConfirmationSuccessPage
  */
 class CMList extends LazyLoadedCMObject {
-
-	/**
-	 * Determine if full details for this client have been loaded
-	 */
-	protected function hasLoadedFullDetails() {
-		return $this->record && isset($this->record->Title);
-	}
-
-	public function getTitle() {
-		if ($this->hasLoadedFullDetails()) {
-			return $this->record->Title;
-		} elseif (isset($this->record->Name)) {
-			return $this->record->Name;
-		}
-	}
 	
-	public function setTitle($value) {
-		if ($this->hasLoadedFullDetails()) {
-			$this->record->Title = $value;
-		} elseif ($this->record) {
-			$this->record->Name = $value;
+	protected function populateFrom($data) {
+		
+		$data = $this->convertToArray($data);
+		
+		// Convert from "summary" format to normal format
+		if(isset($data['Name'])) {
+			$data['Title'] = $data['Name'];
+			unset($data['Name']);
 		}
+		
+		parent::populateFrom($data);
 	}
 	
 	public function getID() {
-		return $this->record->ListID;
+		return $this->ListID;
 	}
 	
 	public function setID($value) {
-		$this->record->ListID = $value;
+		$this->ListID = $value;
 	}
 
-	public function buildRestInterface() {
-		return new CS_REST_Lists($this->ID, $this->apiKey);
+	public function Save() {
+		user_error("Not implemented", E_USER_ERROR);
+	}
+
+	protected function loadFullDetails() {
+		$interface = new CS_REST_Lists($this->ID, $this->apiKey);
+		$result = $interface->get();
+		$response = $this->parseResult($result);
+		$this->populateFrom($response);
 	}
 }

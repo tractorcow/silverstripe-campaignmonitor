@@ -8,21 +8,12 @@
 class CMResources extends CMBase {
 	
 	/**
-	 * @var CS_REST_General
-	 */
-	protected $restInterface = null;
-
-	function __construct($apiKey) {
-		parent::__construct($apiKey);
-		$this->restInterface = new CS_REST_General($this->apiKey);
-	}
-
-	/**
 	 * @return DataObjectSet[CMClient]
 	 * @throws CMError 
 	 */
 	function Clients() {
-		$result = $this->restInterface->get_clients();
+		$interface = new CS_REST_General($this->apiKey);
+		$result = $interface->get_clients();
 		$response = $this->parseResult($result);
 		
 		// Save each client
@@ -38,21 +29,15 @@ class CMResources extends CMBase {
 	 * @param type $clientID 
 	 */
 	function getClient($clientID) {
-		$interface = new CS_REST_Clients($clientID, $this->apiKey);
-		$result = $interface->get();
-		$response = $this->parseResult($result);
-		
-		// Save client
-		return new CMClient($this->apiKey, $response, $interface);
+		$client = new CMClient($this->apiKey);
+		$client->LoadByID($clientID);
+		return $client;
 	}
 	
 	function getList($listID) {
-		$interface = new CS_REST_Lists($listID, $this->apiKey);
-		$result = $interface->get();
-		$response = $this->parseResult($result);
-		
-		// Save client
-		return new CMList($this->apiKey, $response, $interface);
+		$list = new CMList($this->apiKey);
+		$list->LoadByID($listID);
+		return $list;
 	}
 
 }

@@ -9,30 +9,70 @@
  */
 abstract class CMObject extends CMBase {
 	
-	protected $record = null;
+	/**
+	 * @var array
+	 */
+	protected $record = array();
 	
-	abstract function getID();
-	abstract function setID($value);
-	abstract function getTitle();
-	abstract function setTitle($value);
-	
+	/**
+	 * Serialises the data into a format suitable to be sent via the CM api. 
+	 */
+	public function serializeData() {
+		return $this->record;
+	}
+
 	/**
 	 * @param string $apiKey
 	 * @param mixed $data 
 	 */
-	function __construct($apiKey, $data) {
+	function __construct($apiKey = null, $data = null) {
 		parent::__construct($apiKey);
-		
-		$this->record = $data;
+
+		$this->populateFrom($data);
 	}
-	
-	public function hasField($field)
-	{	
-		if($field == 'ID' || $field == 'Title') return true;
+
+	/**
+	 * Parses a stdObject into a nested array
+	 * @param type $data
+	 * @return null 
+	 */
+	protected function convertToArray($data) {
+		// Base case
+		if (empty($data)) return null;
 		
-		if(parent::hasField($field)) return true;
+		// Prepare object for conversion
+		if(is_object($data)) {
+			$data = get_object_vars ($data);
+		}
 		
-		return isset($this->record->$field);
+		// Recursively convert array
+		if (is_array($data)) {
+			return array_map(array($this, 'convertToArray'), $data);
+		}
+		
+		return $data;
+	}
+
+	/**
+	 * Populates the object from the given data
+	 * @param mixed $data Either an object or array with field values
+	 */
+	protected function populateFrom($data) {
+		$this->record = $this->convertToArray($data);
+		if(empty($this->record)) $this->record = array();
+	}
+
+	/**
+	 * Determine if this is a new object, or one that exists in the database
+	 * @return type 
+	 */
+	public function isNew() {
+		return empty($this->ID);
+	}
+
+	public function hasField($field) {
+		return	array_key_exists($field, $this->record) ||
+				$this->hasMethod("get{$field}");
 	}
 
 	/**
@@ -44,13 +84,18 @@ abstract class CMObject extends CMBase {
 	 * @return mixed The field value
 	 */
 	public function getField($field) {
-		return isset($this->record->$field) 
-			? $this->record->$field 
-			: parent::getField($field);
+		if (isset($this->record[$field]))
+			return $this->record[$field];
+
+		return parent::getField($field);
 	}
-	
+
 	public function setField($field, $value) {
-		$this->record->$field = $value;
+		$this->record[$field] = $value;
 	}
-	
+
+	/**
+	 * Saves the object to the database 
+	 */
+	abstract public function Save();
 }

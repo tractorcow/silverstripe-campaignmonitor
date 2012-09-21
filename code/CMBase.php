@@ -13,7 +13,7 @@ abstract class CMBase extends ViewableData {
 	 */
 	protected $apiKey = null;
 	
-	function __construct($apiKey) {
+	function __construct($apiKey = null) {
 		$this->apiKey = $apiKey;
 	}
 	

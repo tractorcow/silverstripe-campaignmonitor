@@ -12,66 +12,38 @@
 abstract class LazyLoadedCMObject extends CMObject {
 	
 	/**
-	 * @var CS_REST_Wrapper_Base
+	 * @var boolean Flag indicating whether all lazy loaded fields have been loaded
 	 */
-	protected $restInterface = null;
-
-	/**
-	 * 
-	 * @param string $apiKey
-	 * @param mixed $data
-	 * @param CS_REST_Wrapper_Base $restInterface 
-	 */
-	function __construct($apiKey, $data, $restInterface = null) {
-		parent::__construct($apiKey, $data);
-
-		$this->restInterface = $restInterface;
-	}
-	/**
-	 * Determine if full details for this object have been loaded
-	 */
-	abstract protected function hasLoadedFullDetails();
-	
-	/**
-	 * Build a new interface for the current object 
-	 * @return CS_REST_Wrapper_Base
-	 */
-	abstract protected function buildRestInterface();
-	
-	/**
-	 * @return CS_REST_Wrapper_Base
-	 */
-	protected function loadRestInterface() {
-		if(!$this->restInterface) {
-			$this->restInterface = $this->buildRestInterface();
-		}
-		return $this->restInterface;
-	}
+	protected $hasLoadedFullDetails = false;
 	
 	/**
 	 * Lazy load full details for this client 
+	 * warning: Will overwrite any changed data in $record
+	 * @todo : Merge new data with changed data
 	 */
-	protected function loadFullDetails() {
-		$interface = $this->loadRestInterface();
-		$result = $interface->get();
-		$this->record = $this->parseResult($result);
-		
-		// Ensure result succeeded in loading the details for this client
-		if(!$this->hasLoadedFullDetails()) {
-			throw new CMError('Could not load full details for object ' . $this->ID, 500);
-		}
+	abstract protected function loadFullDetails();
+	
+	public function LoadByID($id) {
+		$this->ID = $id;
+		$this->loadFullDetails();
+		$this->hasLoadedFullDetails = true;
 	}
 
 	public function hasField($field) {
+		
 		// Check if any other fields exist
 		if(parent::hasField($field)) return true;
 		
-		// If not available, check if fully loaded
-		if($this->hasLoadedFullDetails()) return false;
+		// New records can't lazy-load
+		if($this->isNew()) return false;
 		
+		// prevent additional loading
+		if($this->hasLoadedFullDetails) return false;
+		
+		// Load details
 		$this->loadFullDetails();
+		$this->hasLoadedFullDetails = true;
 		
-		return $this->hasField($field);
+		return parent::hasField($field);
 	}
-	
 }
