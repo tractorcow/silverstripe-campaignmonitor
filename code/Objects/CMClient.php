@@ -80,14 +80,14 @@ class CMClient extends LazyLoadedCMObject {
 
 	/**
 	 * Retrieves all lists for this client
-	 * @return DataObjectSet[CMList]
+	 * @return ArrayList[CMList]
 	 */
 	public function Lists() {
 		$interface = new CS_REST_Clients($this->ID, $this->apiKey);
 		$result = $interface->get_lists();
 		$response = $this->parseResult($result);
 
-		$lists = new DataObjectSet();
+		$lists = new ArrayList();
 		foreach ($response as $listData) {
 			$lists->push(new CMList($this->apiKey, $listData));
 		}
