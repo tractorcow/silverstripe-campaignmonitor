@@ -8,7 +8,7 @@
 class CMResources extends CMBase {
 	
 	/**
-	 * @return DataObjectSet[CMClient]
+	 * @return ArrayList[CMClient]
 	 * @throws CMError 
 	 */
 	function Clients() {
@@ -17,7 +17,7 @@ class CMResources extends CMBase {
 		$response = $this->parseResult($result);
 		
 		// Save each client
-		$clients = new DataObjectSet();
+		$clients = new ArrayList();
 		foreach($response as $clientData) {
 			$clients->push(new CMClient($this->apiKey, $clientData));
 		}
