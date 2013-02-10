@@ -1,0 +1,16 @@
+{
+	"name": "tractorcow/campaignmonitor",
+    "description": "Simple implementation of the campaign monitor API within Silverstripe",
+    "type": "silverstripe-module",
+    "keywords": ["silverstripe", "campaign monitory"],
+	"authors": [
+		{
+			"name": "Damian Mooyman",
+			"email": "damian.mooyman@gmail.com"
+		}
+	],
+	"require": {
+		"silverstripe/framework": "3.*",
+		"composer/installers": "*"
+	}
+}
