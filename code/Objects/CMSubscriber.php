@@ -100,10 +100,28 @@ class CMSubscriber extends LazyLoadedCMObject {
 		$data = parent::serializeData();
 		$customFields = array();
 		foreach($this->customFields as $key => $value) {
-			$customFields[] = array(
-				'Key' => $key,
-				'Value' => $value
-			);
+			// Treat null or empty options as clearing the field
+			if($value === null || $value === array()) {
+				$customFields[] = array(
+					'Key' => $key,
+					'Value' => '',
+					'Clear' => true
+				);
+			} elseif(is_array($value)) {
+				// for multi-select values duplicate each key for set values
+				foreach($value as $nextValue) {
+					$customFields[] = array(
+						'Key' => $key,
+						'Value' => $nextValue
+					);
+				}
+			} else {
+				// Simple field assignment
+				$customFields[] = array(
+					'Key' => $key,
+					'Value' => $value
+				);
+			}
 		}
 		$data['CustomFields'] = $customFields;
 		return $data;

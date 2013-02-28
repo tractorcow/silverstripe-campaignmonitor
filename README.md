@@ -4,7 +4,7 @@ Simple implementation of the campaign monitor API within Silverstripe
 
 ## Credits and Authors
 
- * Damian Mooyman - <https://github.com/tractorcow/silverstripe-facebook-sdk>
+ * Damian Mooyman - <https://github.com/tractorcow/silverstripe-campaignmonitor/>
 
 ## License
 
