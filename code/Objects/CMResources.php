@@ -1,13 +1,16 @@
 <?php
 
 /**
- * Description of CMResources
+ * Represents a list of all base resources associated with a single api key
+ * within Campaign Monitor
  *
- * @author Damo
+ * @author Damian Mooyman
  */
 class CMResources extends CMBase {
 	
 	/**
+	 * Returns all clients accessible with the current api key
+	 * 
 	 * @return ArrayList[CMClient]
 	 * @throws CMError 
 	 */
@@ -25,8 +28,10 @@ class CMResources extends CMBase {
 	}
 	
 	/**
+	 * Retrieves the details of a client by ID
+	 * 
+	 * @param string $clientID The client identifier
 	 * @return CMClient
-	 * @param type $clientID 
 	 */
 	function getClient($clientID) {
 		$client = new CMClient($this->apiKey);
@@ -34,6 +39,12 @@ class CMResources extends CMBase {
 		return $client;
 	}
 	
+	/**
+	 * Retrieves a single list by ID
+	 * 
+	 * @param string $listID The list identifier
+	 * @return CMList
+	 */
 	function getList($listID) {
 		$list = new CMList($this->apiKey);
 		$list->LoadByID($listID);

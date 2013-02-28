@@ -1,47 +1,80 @@
 <?php
 
 /**
- * Description of CMSubscriber
+ * Represents a subscriber within the Campaign Monitor database
  *
- * @author Damo
+ * @property array $CustomFields Custom fields for this subscriber
+ * @property CMList $List The list this subscriber is assigned to
+ * @author Damian Mooyman
  */
 class CMSubscriber extends LazyLoadedCMObject {
 	
 	/**
 	 * The list this subscriber belongs to
+	 * 
 	 * @var CMList
 	 */
 	protected $list = null;
 	
 	/**
 	 * Original email address for the subscriber, only to be changed each update
+	 * 
+	 * @var string
 	 */
 	protected $originalEmail = null;
 	
+	/**
+	 * Custom fields for this subscriber
+	 *
+	 * @var array
+	 */
 	protected $customFields = array();
 
+	/**
+	 * Gets the list of all custom fields
+	 * 
+	 * @return array
+	 */
 	public function getCustomFields() {
 		return $this->customFields;
 	}
 	
+	/**
+	 * Replaces the list of custom fields with another
+	 * 
+	 * @param mixed $value Either an array or a stdObject
+	 */
 	public function setCustomFields($value) {
 		$this->customFields = $this->convertToArray($value);
 	}
 	
+	/**
+	 * Retrieves the value for a specified custom field
+	 * 
+	 * @param string $field The field name
+	 * @return mixed The field value
+	 */
 	public function getCustomField($field) {
-		if(isset($this->customFields['field']))
+		if(isset($this->customFields['field'])) {
 			return $this->customFields['field'];
+		}
 	}
 	
+	/**
+	 * Sets the value for a specified custom field
+	 * 
+	 * @param string $field The field name
+	 * @param mixed $value The field value
+	 */
 	public function setCustomField($field, $value) {
 		$this->customFields['field'] = $value;
 	}
 	
 	/**
+	 * Create a new subscriber record
 	 * 
 	 * @param string $apiKey
 	 * @param mixed $data
-	 * @param CS_REST_Wrapper_Base $restInterface 
 	 * @param CMList $list 
 	 */
 	function __construct($apiKey = null, $data = null, $list = null) {
@@ -75,11 +108,21 @@ class CMSubscriber extends LazyLoadedCMObject {
 		$data['CustomFields'] = $customFields;
 		return $data;
 	}
-	
+
+	/**
+	 * Retrieves the list this subscriber belongs to
+	 * 
+	 * @return CMList
+	 */
 	function getList() {
 		return $this->list;
 	}
 	
+	/**
+	 * Sets the list this subscriber belongs to without saving it
+	 * 
+	 * @param CMList $list Thelist to assign
+	 */
 	function setList($list) {
 		$this->list = $list;
 		
@@ -88,6 +131,8 @@ class CMSubscriber extends LazyLoadedCMObject {
 	}
 
 	/**
+	 * Prepares a CM REST interface object for loading and saving data for this record
+	 * 
 	 * @return CS_REST_Subscribers
 	 * @throws CMError 
 	 */
@@ -155,6 +200,12 @@ class CMSubscriber extends LazyLoadedCMObject {
 		$this->originalEmail = $this->EmailAddress;
 	}
 	
+	/**
+	 * Loads a subscriber details from a list by email address
+	 * 
+	 * @param string $email The email address to identify this subscriber by
+	 * @param CMList $list The list to search within
+	 */
 	public function LoadByEmailAndList($email, $list) {
 		$this->setList($list);
 		$this->LoadByID($email);

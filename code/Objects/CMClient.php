@@ -1,18 +1,19 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
- * Description of CMClient
+ * Represents a client within the Campaign Monitor database
  *
- * @author Damo
- * @property mixed $BasicDetails
- * @proerty mixed $BillingDetails
+ * @author Damian Mooyman
+ * @property array $BasicDetails
+ * @proerty array $BillingDetails
  */
 class CMClient extends LazyLoadedCMObject {
 	
+	/**
+	 * Provided billing details for this client
+	 *
+	 * @var array
+	 */
 	protected $billingDetails = array();
 	
 	protected function populateFrom($data) {
@@ -55,18 +56,40 @@ class CMClient extends LazyLoadedCMObject {
 		$this->ClientID = $value;
 	}
 
+	/**
+	 * Retrieves the billing details for this record
+	 * 
+	 * @return array
+	 */
 	public function getBillingFields() {
 		return $this->billingDetails;
 	}
 	
+	/**
+	 * Assigns the billing details for this record
+	 * 
+	 * @param mixed $value Input data, either a stdObject or array
+	 */
 	public function setBillingFields($value) {
 		$this->billingDetails = $this->convertToArray($value);
 	}
 	
+	/**
+	 * Gets a single field from the billing details
+	 * 
+	 * @param string $field The field name to get
+	 * @return mixed The value
+	 */
 	public function getBillingField($field) {
 		return $this->billingDetails[$field];
 	}
 	
+	/**
+	 * Assigns a billing details attribute
+	 * 
+	 * @param string $field The field name to set
+	 * @param mixed $value The field value
+	 */
 	public function setBillingField($field, $value) {
 		$this->billingDetails[$field] = $value;
 	}
@@ -80,6 +103,7 @@ class CMClient extends LazyLoadedCMObject {
 
 	/**
 	 * Retrieves all lists for this client
+	 * 
 	 * @return ArrayList[CMList]
 	 */
 	public function Lists() {

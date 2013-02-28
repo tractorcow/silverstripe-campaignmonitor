@@ -1,28 +1,33 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
- * Description of LazyLoadedCMObject
+ * Represents a Campaign Monitor data record that may have fields loaded on 
+ * an as needed basis.
  *
- * @author Damo
+ * @author Damian Mooyman
  */
 abstract class LazyLoadedCMObject extends CMObject {
 	
 	/**
-	 * @var boolean Flag indicating whether all lazy loaded fields have been loaded
+	 * Flag indicating whether all lazy loaded fields have been loaded
+	 * 
+	 * @var boolean
 	 */
 	protected $hasLoadedFullDetails = false;
 	
 	/**
 	 * Lazy load full details for this client 
 	 * warning: Will overwrite any changed data in $record
+	 * 
 	 * @todo : Merge new data with changed data
 	 */
 	abstract protected function loadFullDetails();
 	
+	/**
+	 * Loads full details into this object from a record with the given id
+	 * 
+	 * @param string $id The record ID
+	 */
 	public function LoadByID($id) {
 		$this->ID = $id;
 		$this->loadFullDetails();

@@ -1,14 +1,15 @@
 <?php
-require_once realpath(dirname(__FILE__) . '/../thirdparty/createsend/csrest_general.php');
 
 /**
- * Description of CMBase
+ * Base class for Campaign Monitor objects
  *
- * @author Damo
+ * @author Damian Mooyman
  */
 abstract class CMBase extends ViewableData {
 	
 	/**
+	 * The API key used for future requests
+	 * 
 	 * @var string
 	 */
 	protected $apiKey = null;
@@ -19,6 +20,7 @@ abstract class CMBase extends ViewableData {
 	
 	/**
 	 * Checks that a result is successful
+	 * 
 	 * @param type $result
 	 * @throws CMError 
 	 */
@@ -31,6 +33,7 @@ abstract class CMBase extends ViewableData {
 	
 	/**
 	 * Safely extracts results from a CM API call
+	 * 
 	 * @param type $result
 	 * @return type 
 	 */

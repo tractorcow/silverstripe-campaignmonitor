@@ -1,13 +1,9 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
- * Description of CMClient
+ * Represents a list assigned to a client within the Campaign Monitor database
  *
- * @author Damo
+ * @author Damian Mooyman
  * @property boolean $ConfirmedOptIn
  * @property string $UnsubscribePage
  * @property string $UnsubscribeSetting

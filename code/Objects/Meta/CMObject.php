@@ -1,21 +1,25 @@
 <?php
 
 /**
- * Description of CMObject
+ * Base class for Campaign Monitor data objects
  *
- * @property string $ID
- * @property string $Title
- * @author Damo
+ * @property string $ID The Identifier for this object within Campaign monitor
+ * @property string $Title The descriptive title for this object
+ * @author Damian Mooyman
  */
 abstract class CMObject extends CMBase {
 	
 	/**
+	 * Stored data for this object. May contain nested data
+	 * 
 	 * @var array
 	 */
 	protected $record = array();
 	
 	/**
-	 * Serialises the data into a format suitable to be sent via the CM api. 
+	 * Serialises the data into a format suitable to be sent via the CM api.
+	 * 
+	 * @return array Data
 	 */
 	public function serializeData() {
 		return $this->record;
@@ -32,9 +36,11 @@ abstract class CMObject extends CMBase {
 	}
 
 	/**
-	 * Parses a stdObject into a nested array
-	 * @param type $data
-	 * @return null 
+	 * Parses a stdObject into a nested array recursively, in a format suitable
+	 * for $this->record
+	 * 
+	 * @param mixed $data Either an object or array with field values
+	 * @return array The parsed data
 	 */
 	protected function convertToArray($data) {
 		// Base case
@@ -55,6 +61,7 @@ abstract class CMObject extends CMBase {
 
 	/**
 	 * Populates the object from the given data
+	 * 
 	 * @param mixed $data Either an object or array with field values
 	 */
 	protected function populateFrom($data) {
@@ -64,7 +71,8 @@ abstract class CMObject extends CMBase {
 
 	/**
 	 * Determine if this is a new object, or one that exists in the database
-	 * @return type 
+	 * 
+	 * @return boolean 
 	 */
 	public function isNew() {
 		return empty($this->ID);
@@ -75,14 +83,6 @@ abstract class CMObject extends CMBase {
 				$this->hasMethod("get{$field}");
 	}
 
-	/**
-	 * Gets the value of a field.
-	 * Called by {@link __get()} and any getFieldName() methods you might create.
-	 *
-	 * @param string $field The name of the field
-	 *
-	 * @return mixed The field value
-	 */
 	public function getField($field) {
 		if (isset($this->record[$field]))
 			return $this->record[$field];
