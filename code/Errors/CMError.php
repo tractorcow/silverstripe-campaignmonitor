@@ -5,7 +5,7 @@
  *
  * @author Damian Mooyman
  */
-class CMError extends HttpException {
+class CMError extends Exception {
 	
 	/**
 	 * The Campaign Monitor error code
