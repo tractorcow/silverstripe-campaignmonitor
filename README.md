@@ -35,7 +35,7 @@ and subsequently a list.
 	function updateCMSFields(FieldList $fields) {
 
 		// Load base object
-		$resources = CMResources("my api key");
+		$resources = new CMResources("my api key");
 
 		// Get clients under our account
 		$clients = $resources->Clients()->map();
