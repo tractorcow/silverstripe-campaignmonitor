@@ -14,7 +14,7 @@ Simple implementation of the campaign monitor API within Silverstripe
 
  * SilverStripe 3.0
  * PHP 5.3
- * Campaign Monitor PHP library 2.5.2
+ * Campaign Monitor PHP library 2.5.2 (not 3 or above! Yet! It'll break your code and make your clients grumpy).
 
 ## Installation instructions
 
