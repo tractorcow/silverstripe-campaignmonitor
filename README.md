@@ -18,10 +18,9 @@ Simple implementation of the campaign monitor API within Silverstripe
 
 ## Installation instructions
 
-composer require "tractorcow/silverstripe-campaignmonitor": "3.0.*@dev"
-
-composer require "campaignmonitor/createsend-php": "v2.5.2"
-
+```bash
+composer require tractorcow/silverstripe-campaignmonitor:"3.0.*@dev"
+```
 
 ## Examples
 
