@@ -121,4 +121,21 @@ class CMClient extends LazyLoadedCMObject {
 	public function Save() {
 		user_error("Not implemented", E_USER_ERROR);
 	}
+
+	/**
+	 * Retrieves all campaigns for this client
+	 *
+	 * @return ArrayList[CMCampaign]
+	 */
+	public function Campaigns() {
+		$interface = new CS_REST_Clients($this->ID, $this->apiKey);
+		$result = $interface->get_campaigns();
+		$response = $this->parseResult($result);
+
+		$campaigns = new ArrayList();
+		foreach($response as $campaignData) {
+			$campaigns->push(new CMCampaign($this->apiKey, $campaignData));
+		}
+		return $campaigns;
+	}
 }
