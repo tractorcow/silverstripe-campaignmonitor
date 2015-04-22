@@ -51,4 +51,15 @@ class CMResources extends CMBase {
 		return $list;
 	}
 
+	/**
+	 * Retrieves a single campaign by ID
+	 *
+	 * @param string $campaignID The campaign identifier
+	 * @return CMCampaign
+	 */
+	function getCampaign($campaignID) {
+		$campaign = new CMCampaign($this->apiKey);
+		$campaign->LoadByID($campaignID);
+		return $campaign;
+	}
 }

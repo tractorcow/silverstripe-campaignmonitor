@@ -35,7 +35,7 @@ and subsequently a list.
 	function updateCMSFields(FieldList $fields) {
 
 		// Load base object
-		$resources = CMResources("my api key");
+		$resources = new CMResources("my api key");
 
 		// Get clients under our account
 		$clients = $resources->Clients()->map();
@@ -91,6 +91,26 @@ Handling subscription details from a form submission
 		);
 		$subscriber = new CMSubscriber(null, $fields, $list);
 		$subscriber->Save();
+	}
+
+```
+
+
+### Get a list of sent Campaigns
+
+Get a list of all sent campaigns for a client including from name, from email, 
+reply to email, web version URL, ID, subject, name, date sent, and the total number of recipients.
+
+See the [Campaign Monitor API documentation] (https://www.campaignmonitor.com/api/clients/#sent_campaigns) 
+for more information.
+
+
+```php
+	public function Campaigns() {
+		$resources = new CMResources("my api key");
+		if($resources && $client = $resources->getClient("my client id")) {
+			return $client->Campaigns();
+		}
 	}
 
 ```
