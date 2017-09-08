@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\ArrayList;
+
 /**
  * Represents a client within the Campaign Monitor database
  *

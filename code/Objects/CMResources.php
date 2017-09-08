@@ -1,5 +1,6 @@
 <?php
 
+use SilverStripe\ORM\ArrayList;
 /**
  * Represents a list of all base resources associated with a single api key
  * within Campaign Monitor

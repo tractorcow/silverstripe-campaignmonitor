@@ -168,7 +168,7 @@ class CMSubscriber extends LazyLoadedCMObject
     {
         $list = $this->getList();
         if (empty($list) || empty($list->ID) || empty($this->apiKey)) {
-            throw new CMError("Could not build interface for CMSubscriber without a list ID and apiKey");
+            throw new CMError("Could not build interface for CMSubscriber without a list ID and apiKey", 500);
         }
         return new CS_REST_Subscribers($list->ID, $this->apiKey);
     }
@@ -214,9 +214,7 @@ class CMSubscriber extends LazyLoadedCMObject
         // Determine identifier by which we retrieve this record
         $result = $interface->get($this->ID);
         $response = $this->parseResult($result);
-        
-        
-        Debug::dump($response);
+
         user_error("Not implemented", E_USER_ERROR);
         
         $this->originalEmail = $response->EmailAddress;

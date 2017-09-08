@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\View\ViewableData;
+
 /**
  * Base class for Campaign Monitor objects
  *
