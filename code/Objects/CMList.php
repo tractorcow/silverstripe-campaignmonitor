@@ -1,5 +1,9 @@
 <?php
 
+namespace Tractorcow\CampaignMonitor;
+
+use CS_REST_Lists;
+
 /**
  * Represents a list assigned to a client within the Campaign Monitor database
  *
@@ -11,25 +15,25 @@
  */
 class CMList extends LazyLoadedCMObject
 {
-    
+
     protected function populateFrom($data)
     {
         $data = $this->convertToArray($data);
-        
+
         // Convert from "summary" format to normal format
         if (isset($data['Name'])) {
             $data['Title'] = $data['Name'];
             unset($data['Name']);
         }
-        
+
         parent::populateFrom($data);
     }
-    
+
     public function getID()
     {
         return $this->ListID;
     }
-    
+
     public function setID($value)
     {
         $this->ListID = $value;

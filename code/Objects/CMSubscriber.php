@@ -1,5 +1,9 @@
 <?php
 
+namespace Tractorcow\CampaignMonitor;
+
+use CS_REST_Subscribers;
+
 /**
  * Represents a subscriber within the Campaign Monitor database
  *
@@ -9,21 +13,21 @@
  */
 class CMSubscriber extends LazyLoadedCMObject
 {
-    
+
     /**
      * The list this subscriber belongs to
-     * 
+     *
      * @var CMList
      */
     protected $list = null;
-    
+
     /**
      * Original email address for the subscriber, only to be changed each update
-     * 
+     *
      * @var string
      */
     protected $originalEmail = null;
-    
+
     /**
      * Custom fields for this subscriber
      *
@@ -33,27 +37,27 @@ class CMSubscriber extends LazyLoadedCMObject
 
     /**
      * Gets the list of all custom fields
-     * 
+     *
      * @return array
      */
     public function getCustomFields()
     {
         return $this->customFields;
     }
-    
+
     /**
      * Replaces the list of custom fields with another
-     * 
+     *
      * @param mixed $value Either an array or a stdObject
      */
     public function setCustomFields($value)
     {
         $this->customFields = $this->convertToArray($value);
     }
-    
+
     /**
      * Retrieves the value for a specified custom field
-     * 
+     *
      * @param string $field The field name
      * @return mixed The field value
      */
@@ -63,10 +67,10 @@ class CMSubscriber extends LazyLoadedCMObject
             return $this->customFields['field'];
         }
     }
-    
+
     /**
      * Sets the value for a specified custom field
-     * 
+     *
      * @param string $field The field name
      * @param mixed $value The field value
      */
@@ -74,33 +78,33 @@ class CMSubscriber extends LazyLoadedCMObject
     {
         $this->customFields['field'] = $value;
     }
-    
+
     /**
      * Create a new subscriber record
-     * 
+     *
      * @param string $apiKey
      * @param mixed $data
-     * @param CMList $list 
+     * @param CMList $list
      */
     public function __construct($apiKey = null, $data = null, $list = null)
     {
         parent::__construct($apiKey, $data);
-        
+
         $this->setList($list);
     }
-    
+
     public function populateFrom($data)
     {
         $data = $this->convertToArray($data);
-        
+
         if (isset($data['CustomFields'])) {
             $this->setCustomFields($data['CustomFields']);
             unset($data['CustomFields']);
         }
-        
+
         parent::populateFrom($data);
     }
-    
+
     public function serializeData()
     {
         $data = parent::serializeData();
@@ -130,28 +134,29 @@ class CMSubscriber extends LazyLoadedCMObject
             }
         }
         $data['CustomFields'] = $customFields;
+
         return $data;
     }
 
     /**
      * Retrieves the list this subscriber belongs to
-     * 
+     *
      * @return CMList
      */
     public function getList()
     {
         return $this->list;
     }
-    
+
     /**
      * Sets the list this subscriber belongs to without saving it
-     * 
+     *
      * @param CMList $list Thelist to assign
      */
     public function setList($list)
     {
         $this->list = $list;
-        
+
         // For new records the api key can be inherited from the list
         if (empty($this->apiKey)) {
             $this->apiKey = $list->apiKey;
@@ -160,19 +165,20 @@ class CMSubscriber extends LazyLoadedCMObject
 
     /**
      * Prepares a CM REST interface object for loading and saving data for this record
-     * 
+     *
      * @return CS_REST_Subscribers
-     * @throws CMError 
+     * @throws CMError
      */
     protected function buildRestInterface()
     {
         $list = $this->getList();
         if (empty($list) || empty($list->ID) || empty($this->apiKey)) {
-            throw new CMError("Could not build interface for CMSubscriber without a list ID and apiKey");
+            throw new CMError("Could not build interface for CMSubscriber without a list ID and apiKey", 500);
         }
+
         return new CS_REST_Subscribers($list->ID, $this->apiKey);
     }
-    
+
     public function isNew()
     {
         return empty($this->originalEmail);
@@ -185,6 +191,7 @@ class CMSubscriber extends LazyLoadedCMObject
         if (!empty($this->originalEmail)) {
             return $this->originalEmail;
         }
+
         return $this->EmailAddress;
     }
 
@@ -210,15 +217,13 @@ class CMSubscriber extends LazyLoadedCMObject
     protected function loadFullDetails()
     {
         $interface = $this->buildRestInterface();
-        
+
         // Determine identifier by which we retrieve this record
         $result = $interface->get($this->ID);
         $response = $this->parseResult($result);
-        
-        
-        Debug::dump($response);
+
         user_error("Not implemented", E_USER_ERROR);
-        
+
         $this->originalEmail = $response->EmailAddress;
     }
 
@@ -235,10 +240,10 @@ class CMSubscriber extends LazyLoadedCMObject
         $this->parseResult($result);
         $this->originalEmail = $this->EmailAddress;
     }
-    
+
     /**
      * Loads a subscriber details from a list by email address
-     * 
+     *
      * @param string $email The email address to identify this subscriber by
      * @param CMList $list The list to search within
      */
