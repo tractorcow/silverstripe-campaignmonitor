@@ -1,7 +1,7 @@
 {
     "name": "tractorcow/silverstripe-campaignmonitor",
     "description": "Simple implementation of the campaign monitor API within Silverstripe",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "keywords": ["silverstripe", "campaign monitor"],
     "authors": [
         {
