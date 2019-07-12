@@ -1,7 +1,7 @@
 {
     "name": "tractorcow/silverstripe-campaignmonitor",
     "description": "Simple implementation of the campaign monitor API within Silverstripe",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "keywords": ["silverstripe", "campaign monitor"],
     "authors": [
         {
@@ -13,9 +13,9 @@
         "issues": "http://github.com/tractorcow/silverstripe-campaignmonitor/issues"
     },
     "require": {
-		"silverstripe/framework": "^4.0",
+		"silverstripe/framework": "^4",
         "composer/installers": "*",
-        "campaignmonitor/createsend-php": "v2.5.2"
+        "campaignmonitor/createsend-php": "6.0.0"
     },
     "extra": {
         "installer-name": "campaignmonitor"
