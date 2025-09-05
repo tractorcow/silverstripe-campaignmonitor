@@ -3,6 +3,7 @@
 namespace Tractorcow\CampaignMonitor;
 
 use CS_REST_Subscribers;
+use Psr\Log\LogLevel;
 
 /**
  * Represents a subscriber within the Campaign Monitor database
