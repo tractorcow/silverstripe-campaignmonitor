@@ -12,9 +12,8 @@ Simple implementation of the campaign monitor API within Silverstripe
 
 ## Requirements
 
- * SilverStripe ^4
- * PHP ^7.1
- * Campaign Monitor PHP library 6.0.0
+ * SilverStripe CMS
+ * A Campaign Monitor account with an API key
 
 ## Installation instructions
 
@@ -62,7 +61,7 @@ Handling subscription details from a form submission
 
 ```php
 
-	public function subscribe($data, $form) 
+	public function subscribe($data, $form)
 	{
 		$listID = SiteConfig::current_site_config()->DefaultList;
 		$resources = CMResources::create("my api key");
@@ -73,10 +72,10 @@ Handling subscription details from a form submission
 		// Error handling here
 	}
 
-	protected function addUserToList($data, $list) 
+	protected function addUserToList($data, $list)
 	{
 		if(empty($list)) return;
-		
+
 		// Create subscriber
 		$fields = [
 			'EmailAddress' => $data['Email'],

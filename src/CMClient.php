@@ -24,8 +24,6 @@ class CMClient extends LazyLoadedCMObject
 
     protected function populateFrom($data)
     {
-        $data = $this->convertToArray($data);
-
         // Check billing data
         if (isset($data['BillingDetails'])) {
             $this->setBillingFields($data['BillingDetails']);
@@ -110,29 +108,28 @@ class CMClient extends LazyLoadedCMObject
 
     protected function loadFullDetails()
     {
-        $interface = new CS_REST_Clients($this->ID, $this->apiKey);
-        $result = $interface->get();
-        $response = $this->parseResult($result);
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
+        $serialiser = new JsonAssocDeserialiser($this->logger);
+        $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
+        $response = $this->parseResult($interface->get());
         $this->populateFrom($response);
+        $this->logger->setContext('');
     }
 
     /**
      * Retrieves all lists for this client
      *
-     * @return ArrayList[CMList]
+     * @return ArrayList<CMList>
      */
     public function Lists()
     {
-        $interface = new CS_REST_Clients($this->ID, $this->apiKey);
-        $result = $interface->get_lists();
-        $response = $this->parseResult($result);
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
+        $serialiser = new JsonAssocDeserialiser($this->logger);
+        $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
+        $response = $this->parseResult($interface->get_lists());
+        $this->logger->setContext('');
 
-        $lists = new ArrayList();
-        foreach ($response as $listData) {
-            $lists->push(new CMList($this->apiKey, $listData));
-        }
-
-        return $lists;
+        return ArrayList::create(array_map(fn($list) => CMList::create($this->apiKey, $list), $response));
     }
 
     public function Save()
@@ -143,19 +140,19 @@ class CMClient extends LazyLoadedCMObject
     /**
      * Retrieves all campaigns for this client
      *
-     * @return ArrayList[CMCampaign]
+     * @return ArrayList<CMCampaign>
      */
     public function Campaigns()
     {
-        $interface = new CS_REST_Clients($this->ID, $this->apiKey);
-        $result = $interface->get_campaigns();
-        $response = $this->parseResult($result);
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
+        $serialiser = new JsonAssocDeserialiser($this->logger);
+        $interface = new CS_REST_Clients($this->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
+        $response = $this->parseResult($interface->get_campaigns());
+        $this->logger->setContext('');
 
-        $campaigns = new ArrayList();
-        foreach ($response as $campaignData) {
-            $campaigns->push(new CMCampaign($this->apiKey, $campaignData));
-        }
-
-        return $campaigns;
+        return ArrayList::create(array_map(
+            fn($campaign) => CMCampaign::create($this->apiKey, $campaign),
+            $response['Results']
+        ));
     }
 }

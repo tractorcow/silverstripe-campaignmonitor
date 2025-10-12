@@ -11,13 +11,6 @@ use CS_REST_Clients;
  */
 class CMCampaign extends LazyLoadedCMObject
 {
-
-    protected function populateFrom($data)
-    {
-        $data = $this->convertToArray($data);
-        parent::populateFrom($data);
-    }
-
     public function getClientID()
     {
         return $this->ClientID;
@@ -35,9 +28,12 @@ class CMCampaign extends LazyLoadedCMObject
 
     protected function loadFullDetails()
     {
-        $interface = new CS_REST_Clients($this->ClientID, $this->apiKey);
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
+        $serialiser = new JsonAssocDeserialiser($this->logger);
+        $interface = new CS_REST_Clients($this->ClientID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
         $result = $interface->get_campaign();
         $response = $this->parseResult($result);
         $this->populateFrom($response);
+        $this->logger->setContext('');
     }
 }

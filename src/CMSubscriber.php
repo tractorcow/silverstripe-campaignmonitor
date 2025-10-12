@@ -3,6 +3,7 @@
 namespace Tractorcow\CampaignMonitor;
 
 use CS_REST_Subscribers;
+use Psr\Log\LogLevel;
 
 /**
  * Represents a subscriber within the Campaign Monitor database
@@ -95,8 +96,6 @@ class CMSubscriber extends LazyLoadedCMObject
 
     public function populateFrom($data)
     {
-        $data = $this->convertToArray($data);
-
         if (isset($data['CustomFields'])) {
             $this->setCustomFields($data['CustomFields']);
             unset($data['CustomFields']);
@@ -134,6 +133,9 @@ class CMSubscriber extends LazyLoadedCMObject
             }
         }
         $data['CustomFields'] = $customFields;
+        if (!isset($data['ConsentToTrack'])) {
+            $data['ConsentToTrack'] = 'Unchanged';
+        }
 
         return $data;
     }
@@ -173,10 +175,13 @@ class CMSubscriber extends LazyLoadedCMObject
     {
         $list = $this->getList();
         if (empty($list) || empty($list->ID) || empty($this->apiKey)) {
-            throw new CMError("Could not build interface for CMSubscriber without a list ID and apiKey", 500);
+            $message = "Could not build interface for CMSubscriber without a list ID and apiKey";
+            $this->logger->log_message($message, static::class, LogLevel::ERROR);
+            throw new CMError($message, 500);
         }
 
-        return new CS_REST_Subscribers($list->ID, $this->apiKey);
+        $serialiser = new JsonAssocDeserialiser($this->logger);
+        return new CS_REST_Subscribers($list->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
     }
 
     public function isNew()
@@ -216,19 +221,22 @@ class CMSubscriber extends LazyLoadedCMObject
 
     protected function loadFullDetails()
     {
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
         $interface = $this->buildRestInterface();
 
         // Determine identifier by which we retrieve this record
         $result = $interface->get($this->ID);
         $response = $this->parseResult($result);
+        $this->logger->setContext('');
 
         user_error("Not implemented", E_USER_ERROR);
 
-        $this->originalEmail = $response->EmailAddress;
+        $this->originalEmail = $response['EmailAddress'];
     }
 
     public function Save()
     {
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
         $interface = $this->buildRestInterface();
         $data = $this->serializeData();
         if ($this->isNew()) {
@@ -238,6 +246,7 @@ class CMSubscriber extends LazyLoadedCMObject
         }
         // Check result, and reset ID after successful save
         $this->parseResult($result);
+        $this->logger->setContext('');
         $this->originalEmail = $this->EmailAddress;
     }
 

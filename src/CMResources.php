@@ -17,22 +17,17 @@ class CMResources extends CMBase
     /**
      * Returns all clients accessible with the current api key
      *
-     * @return ArrayList[CMClient]
-     * @throws CMError
+     * @return ArrayList<CMClient>
      */
     public function Clients()
     {
-        $interface = new CS_REST_General($this->apiKey);
-        $result = $interface->get_clients();
-        $response = $this->parseResult($result);
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
+        $serialiser = new JsonAssocDeserialiser($this->logger);
+        $interface = new CS_REST_General($this->apiKey, log: $this->logger, serialiser: $serialiser);
+        $response = $this->parseResult($interface->get_clients());
+        $this->logger->setContext('');
 
-        // Save each client
-        $clients = new ArrayList();
-        foreach ($response as $clientData) {
-            $clients->push(new CMClient($this->apiKey, $clientData));
-        }
-
-        return $clients;
+        return ArrayList::create(array_map(fn($client) => CMClient::create($this->apiKey, $client), $response));
     }
 
     /**
@@ -43,7 +38,7 @@ class CMResources extends CMBase
      */
     public function getClient($clientID)
     {
-        $client = new CMClient($this->apiKey);
+        $client = CMClient::create($this->apiKey);
         $client->LoadByID($clientID);
 
         return $client;
@@ -57,7 +52,7 @@ class CMResources extends CMBase
      */
     public function getList($listID)
     {
-        $list = new CMList($this->apiKey);
+        $list = CMList::create($this->apiKey);
         $list->LoadByID($listID);
 
         return $list;
@@ -71,7 +66,7 @@ class CMResources extends CMBase
      */
     public function getCampaign($campaignID)
     {
-        $campaign = new CMCampaign($this->apiKey);
+        $campaign = CMCampaign::create($this->apiKey);
         $campaign->LoadByID($campaignID);
 
         return $campaign;

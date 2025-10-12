@@ -18,8 +18,6 @@ class CMList extends LazyLoadedCMObject
 
     protected function populateFrom($data)
     {
-        $data = $this->convertToArray($data);
-
         // Convert from "summary" format to normal format
         if (isset($data['Name'])) {
             $data['Title'] = $data['Name'];
@@ -46,9 +44,12 @@ class CMList extends LazyLoadedCMObject
 
     protected function loadFullDetails()
     {
-        $interface = new CS_REST_Lists($this->ID, $this->apiKey);
+        $this->logger->setContext(__CLASS__ . '::' . __FUNCTION__);
+        $serialiser = new JsonAssocDeserialiser($this->logger);
+        $interface = new CS_REST_Lists($this->ID, $this->apiKey, log: $this->logger, serialiser: $serialiser);
         $result = $interface->get();
         $response = $this->parseResult($result);
         $this->populateFrom($response);
+        $this->logger->setContext('');
     }
 }

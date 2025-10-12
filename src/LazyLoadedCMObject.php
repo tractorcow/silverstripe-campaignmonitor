@@ -33,6 +33,9 @@ abstract class LazyLoadedCMObject extends CMObject
      */
     public function LoadByID($id)
     {
+        if (!$id) {
+            throw new CMError(static::class . ': Cannot load an invalid ID');
+        }
         $this->ID = $id;
         $this->loadFullDetails();
         $this->hasLoadedFullDetails = true;
