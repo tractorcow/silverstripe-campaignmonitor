@@ -3,14 +3,14 @@
 namespace Tractorcow\CampaignMonitor;
 
 use Psr\Log\LogLevel;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Base class for Campaign Monitor objects
  *
  * @author Damian Mooyman
  */
-abstract class CMBase extends ViewableData
+abstract class CMBase extends ModelData
 {
     protected $logger;
 
