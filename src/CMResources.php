@@ -3,7 +3,7 @@
 namespace Tractorcow\CampaignMonitor;
 
 use CS_REST_General;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 
 /**
  * Represents a list of all base resources associated with a single api key

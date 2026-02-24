@@ -13,7 +13,7 @@
         "issues": "http://github.com/tractorcow/silverstripe-campaignmonitor/issues"
     },
     "require": {
-        "silverstripe/framework": "^5",
+        "silverstripe/framework": "^6",
         "campaignmonitor/createsend-php": "^7",
         "psr/log": "^3"
     },

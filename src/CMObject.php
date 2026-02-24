@@ -91,20 +91,21 @@ abstract class CMObject extends CMBase
         return empty($this->ID);
     }
 
-    public function hasField($field)
+    public function hasField(string $field): bool
     {
         return ($this->record && array_key_exists($field, $this->record))
             || $this->hasMethod("get{$field}");
     }
 
-    public function getField($field)
+    public function getField(string $field): mixed
     {
         return $this->record[$field] ?? parent::getField($field);
     }
 
-    public function setField($field, $value)
+    public function setField(string $field, mixed $value): static
     {
         $this->record[$field] = $value;
+        return $this->record[$field];
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace Tractorcow\CampaignMonitor;
 
 use CS_REST_Clients;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 
 /**
  * Represents a client within the Campaign Monitor database

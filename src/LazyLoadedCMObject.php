@@ -34,14 +34,14 @@ abstract class LazyLoadedCMObject extends CMObject
     public function LoadByID($id)
     {
         if (!$id) {
-            throw new CMError(static::class . ': Cannot load an invalid ID');
+            throw new CMError(static::class . ': Cannot load an invalid ID', 400);
         }
         $this->ID = $id;
         $this->loadFullDetails();
         $this->hasLoadedFullDetails = true;
     }
 
-    public function hasField($field)
+    public function hasField(string $field): bool
     {
 
         // Check if any other fields exist
