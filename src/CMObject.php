@@ -105,7 +105,7 @@ abstract class CMObject extends CMBase
     public function setField(string $field, mixed $value): static
     {
         $this->record[$field] = $value;
-        return $this->record[$field];
+        return $this;
     }
 
     /**
